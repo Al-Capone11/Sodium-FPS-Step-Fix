@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "sodium-fps-step-fix",
+	"version": "${version}",
+	"name": "Sodium FPS Step Fix",
+	"description": "Complemento no oficial para Sodium que permite fijar el limite de FPS en cualquier valor (paso 1) en vez de saltos de 10 en 10. Requiere Sodium.",
+	"authors": [
+		"Al-Capone11"
+	],
+	"contact": {
+		"sources": "https://github.com/Al-Capone11/sodium-fps-step-fix"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/sodium-fps-step-fix/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			"io.github.alcapone11.sodiumfpsstepfix.SodiumFPSStepFix"
+		]
+	},
+	"mixins": [
+		"sodium-fps-step-fix.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.2",
+		"java": ">=25",
+		"fabric-api": "*",
+		"sodium": "*"
+	}
+}
