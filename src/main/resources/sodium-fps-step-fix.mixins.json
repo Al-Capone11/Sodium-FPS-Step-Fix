@@ -4,7 +4,8 @@
 	"compatibilityLevel": "JAVA_25",
 	"mixins": [
 		"SodiumConfigBuilderMixin",
-		"OptionsMixin"
+		"OptionsMixin",
+		"MinecraftMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
