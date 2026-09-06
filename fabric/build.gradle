@@ -1,0 +1,26 @@
+plugins {
+	id 'net.fabricmc.fabric-loom-remap'
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
+
+	// Sodium - compile against it but don't bundle it
+	modCompileOnly "maven.modrinth:sodium:${rootProject.sodium_version_fabric}"
+	modRuntimeOnly "maven.modrinth:sodium:${rootProject.sodium_version_fabric}"
+}
+
+loom {
+	accessWidenerPath = rootProject.file("common/src/main/resources/sodiumfpsstepfix.accesswidener")
+}
+
+processResources {
+	def version = project.version
+	inputs.property "version", version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": version
+	}
+}

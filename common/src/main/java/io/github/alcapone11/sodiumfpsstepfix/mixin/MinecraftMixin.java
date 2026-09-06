@@ -1,7 +1,7 @@
 package io.github.alcapone11.sodiumfpsstepfix.mixin;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.alcapone11.sodiumfpsstepfix.PreciseFrameLimiter;
-import net.minecraft.client.FramerateLimiter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import org.spongepowered.asm.mixin.Final;
@@ -21,16 +21,16 @@ public class MinecraftMixin {
     public Options options;
 
     @Redirect(
-            method = "renderFrame(Z)V",
+            method = "runTick(Z)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/FramerateLimiter;limitDisplayFPS(I)V"
+                    target = "Lcom/mojang/blaze3d/systems/RenderSystem;limitDisplayFPS(I)V"
             )
     )
     private void sodiumFpsStepFix$usePreciseFrameLimiter(int framerateLimit) {
         if (this.options.enableVsync().get()) {
             this.sodiumFpsStepFix$preciseFrameLimiter.reset();
-            FramerateLimiter.limitDisplayFPS(framerateLimit);
+            RenderSystem.limitDisplayFPS(framerateLimit);
             return;
         }
 

@@ -41,24 +41,27 @@ import java.util.function.ToIntFunction;
  * framerateLimit. Repite el proceso de "jar xf ... Options.java" y
  * cuenta de nuevo las llamadas a ".xmap(" con 3 argumentos si esto llega
  * a pasar.
+ *
+ * TODO(1.21.1): User needs to verify the ordinal.
+ * Run `./gradlew genSources`, extract `Options.java` and verify that the `xmap` call for
+ * `framerateLimit` is still the SECOND call (ordinal = 1).
  */
 @Mixin(Options.class)
 public class OptionsMixin {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Redirect(
-            method = "<init>(Lnet/minecraft/client/Minecraft;Ljava/io/File;)V",
+            method = "<init>",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/OptionInstance$IntRange;xmap(Ljava/util/function/IntFunction;Ljava/util/function/ToIntFunction;Z)Lnet/minecraft/client/OptionInstance$SliderableValueSet;",
+                    target = "Lnet/minecraft/client/OptionInstance$IntRange;xmap(Ljava/util/function/IntFunction;Ljava/util/function/ToIntFunction;)Lnet/minecraft/client/OptionInstance$SliderableValueSet;",
                     ordinal = 1
             )
     )
     private OptionInstance.SliderableValueSet sodiumFpsStepFix$fixFramerateLimitRange(
             OptionInstance.IntRange self,
             IntFunction to,
-            ToIntFunction from,
-            boolean discrete
+            ToIntFunction from
     ) {
         // Rango real 10-260, sin reescalar a "escalones" de 1-26.
         return new OptionInstance.IntRange(10, 260);

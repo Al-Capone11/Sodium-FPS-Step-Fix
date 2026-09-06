@@ -1,11 +1,11 @@
 {
 	"required": true,
 	"package": "io.github.alcapone11.sodiumfpsstepfix.mixin",
-	"compatibilityLevel": "JAVA_25",
-	"mixins": [
-		"SodiumConfigBuilderMixin",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"MinecraftMixin",
 		"OptionsMixin",
-		"MinecraftMixin"
+		"SodiumConfigBuilderMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

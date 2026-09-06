@@ -11,3 +11,4 @@ pluginManagement {
 
 // Should match your modid
 rootProject.name = 'sodium-fps-step-fix'
+include 'fabric'
