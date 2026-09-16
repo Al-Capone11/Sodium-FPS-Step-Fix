@@ -1,9 +1,5 @@
 package io.github.alcapone11.sodiumfpsstepfix;
 
-// TODO(1.21.1): User needs to verify if this is `net.minecraft.resources.Identifier` (Mojang),
-// `net.minecraft.util.Identifier` (Yarn), or `net.minecraft.resources.ResourceLocation` in older versions.
-import net.minecraft.resources.ResourceLocation;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,9 +21,5 @@ public final class SodiumFPSStepFix {
 		// Proceed with mild caution.
 
 		LOGGER.info("Sodium FPS Step Fix loaded.");
-	}
-
-	public static ResourceLocation id(String path) {
-		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
 	}
 }

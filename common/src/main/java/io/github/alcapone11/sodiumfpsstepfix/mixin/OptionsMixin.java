@@ -14,37 +14,35 @@ import java.util.function.ToIntFunction;
  * sino como un "escalon" interno de 1 a 26 que luego se multiplica/divide
  * por 10, usando IntRangeBase#xmap(...):
  *
- *     new OptionInstance.IntRange(1, 26).xmap(value -> value * 10, value -> value / 10, true)
+ *     new OptionInstance.IntRange(1, 26).xmap(value -> value * 10, value -> value / 10)
  *
- * Por eso, aunque Sodium ya permita elegir 144, al aplicar Minecraft hacia
- * 144 / 10 = 14 (division entera) y al leerlo de vuelta 14 * 10 = 140.
+ * Por eso, aunque el slider de Sodium ya permita elegir 144, al aplicar
+ * Minecraft hacia 144 / 10 = 14 (division entera) y al leerlo de vuelta
+ * 14 * 10 = 140.
  *
- * Dentro del constructor de Options hay 6 llamadas a este mismo metodo
- * xmap(IntFunction, ToIntFunction, boolean) (una por cada opcion que
- * necesita reescalar su rango interno). La de framerateLimit es la
- * SEGUNDA (ordinal = 1, contando desde 0), confirmado directamente sobre
- * el codigo fuente de esta version de Minecraft (26.2):
+ * En Minecraft 1.20.1 el constructor de Options llama a
+ * OptionInstance$IntRange.xmap(IntFunction, ToIntFunction) 5 veces.
+ * La de framerateLimit es la SEGUNDA (ordinal = 1, contando desde 0),
+ * VERIFICADO directamente sobre el bytecode real de 1.20.1
+ * (minecraft-merged...1_20_1, constructor <init> de net.minecraft.client.Options):
  *
- *   ordinal 0 -> guiScale-like (linea 117, /4.0)
- *   ordinal 1 -> framerateLimit (linea 129, *10 / 10)  <- la que arreglamos
- *   ordinal 2..5 -> otras opciones (brillo, distancia niebla, etc.)
+ *   offset  115: IntRange.xmap(...) -> entityDistanceScaling (2-20, /4.0)
+ *   offset  178: IntRange.xmap(...) -> framerateLimit (1-26, *10 //10)  <- la que arreglamos
+ *   offset  930: IntRange.xmap(...) -> chatDelay (0-60, /10.0)
+ *   offset  994: IntRange.xmap(...) -> notificationDisplayTime (5-100, /10.0)
+ *   offset 1221: IntRange.xmap(...) -> mouseWheelSensitivity (-200..100, log/unlog)
  *
  * Este Mixin reemplaza SOLO esa 2da llamada: en vez de aplicar la
  * transformacion *10 //10, devuelve un IntRange real de 10 a 260 sin
- * reescalar, para que el valor guardado sea el FPS real. Las otras 5
+ * reescalar, para que el valor guardado sea el FPS real. Las demas
  * llamadas de xmap quedan intactas.
  *
  * ADVERTENCIA: a diferencia de nuestro otro Mixin (que identifica su
  * objetivo por valores unicos), este usa una posicion (ordinal) dentro
- * del codigo de Mojang. Si una futura version de Minecraft reordena estas
- * opciones dentro de Options, el ordinal puede dejar de apuntar a
- * framerateLimit. Repite el proceso de "jar xf ... Options.java" y
- * cuenta de nuevo las llamadas a ".xmap(" con 3 argumentos si esto llega
- * a pasar.
- *
- * TODO(1.21.1): User needs to verify the ordinal.
- * Run `./gradlew genSources`, extract `Options.java` and verify that the `xmap` call for
- * `framerateLimit` is still the SECOND call (ordinal = 1).
+ * del codigo de Mojang. Si una futura version de Minecraft reordena
+ * estas opciones dentro de Options, el ordinal puede dejar de apuntar
+ * a framerateLimit. Repite el proceso de "javap -c Options | grep xmap"
+ * y cuenta de nuevo las llamadas a ".xmap(" si esto llega a pasar.
  */
 @Mixin(Options.class)
 public class OptionsMixin {
