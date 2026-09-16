@@ -4,6 +4,10 @@ pluginManagement {
 			name = 'Fabric'
 			url = 'https://maven.fabricmc.net/'
 		}
+		maven {
+			name = 'NeoForged'
+			url = 'https://maven.neoforged.net/releases'
+		}
 		mavenCentral()
 		gradlePluginPortal()
 	}
@@ -12,3 +16,4 @@ pluginManagement {
 // Should match your modid
 rootProject.name = 'sodium-fps-step-fix'
 include 'fabric'
+include 'neoforge'

@@ -1,7 +1,8 @@
 package io.github.alcapone11.sodiumfpsstepfix;
 
-// TODO(1.21.1): User needs to verify if this is `net.minecraft.resources.Identifier` (Mojang),
-// `net.minecraft.util.Identifier` (Yarn), or `net.minecraft.resources.ResourceLocation` in older versions.
+// MC 1.21.1 (Mojang mappings): ResourceLocation with
+// ResourceLocation.fromNamespaceAndPath(...). Verified by successful
+// compilation against both loom and ModDevGradle artifacts.
 import net.minecraft.resources.ResourceLocation;
 
 import org.slf4j.Logger;

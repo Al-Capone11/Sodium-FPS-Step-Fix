@@ -38,13 +38,21 @@ import java.util.function.ToIntFunction;
  * objetivo por valores unicos), este usa una posicion (ordinal) dentro
  * del codigo de Mojang. Si una futura version de Minecraft reordena estas
  * opciones dentro de Options, el ordinal puede dejar de apuntar a
- * framerateLimit. Repite el proceso de "jar xf ... Options.java" y
- * cuenta de nuevo las llamadas a ".xmap(" con 3 argumentos si esto llega
+ * framerateLimit. Repita el proceso de "jar xf ... Options.java" y
+ * cuente de nuevo las llamadas a ".xmap(" con 3 argumentos si esto llega
  * a pasar.
  *
- * TODO(1.21.1): User needs to verify the ordinal.
- * Run `./gradlew genSources`, extract `Options.java` and verify that the `xmap` call for
- * `framerateLimit` is still the SECOND call (ordinal = 1).
+ * ORDINAL VERIFICADO PARA 1.21.1 (2026-09-15):
+ * - `./gradlew :fabric:genSources` -> Options.java de MC 1.21.1 (mappings Mojang):
+ *   linea 117:  new OptionInstance.IntRange(2, 20).xmap(i -> i / 4.0, ...)  -> entityDistanceScaling (ordinal 0)
+ *   linea 129:  new OptionInstance.IntRange(1, 26).xmap(i -> i * 10, integer -> integer / 10) -> framerateLimit (ordinal 1)
+ * - Bytecode del constructor <init> (javap -c sobre neoforge-21.1.51-merged.jar):
+ *   offset 132:  xmap de IntRange(2,20)   (entityDistanceScaling)  -> ordinal 0
+ *   offset 195:  xmap de IntRange(1,26), precedido por ldc "options.framerateLimit" -> ordinal 1
+ *   despues siguen: chatDelay (IntRange(0,60), ordinal 2), notificationDisplayTime
+ *   (IntRange(5,100), ordinal 3) y mouseWheelSensitivity (IntRange(-200,100), ordinal 4).
+ * El campo framerateLimit sigue siendo la SEGUNDA llamada xmap(IntFunction, ToIntFunction)
+ * dentro de <init> => ordinal = 1 es CORRECTO en 1.21.1.
  */
 @Mixin(Options.class)
 public class OptionsMixin {

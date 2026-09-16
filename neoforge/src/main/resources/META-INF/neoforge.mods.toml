@@ -1,0 +1,37 @@
+modLoader="javafml"
+loaderVersion="[2,)"
+license="CC0-1.0"
+
+[[mods]]
+modId="sodiumfpsstepfix"
+version="${version}"
+displayName="Sodium FPS Step Fix"
+authors="Al-Capone11"
+logoFile="assets/sodium-fps-step-fix/icon.png"
+description='''
+Complemento no oficial para Sodium que permite fijar el limite de FPS en cualquier valor (paso 1) en vez de saltos de 10 en 10. Requiere Sodium.
+'''
+
+[[dependencies.sodiumfpsstepfix]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.51,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.sodiumfpsstepfix]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.22)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.sodiumfpsstepfix]]
+modId="sodium"
+type="required"
+versionRange="*"
+ordering="NONE"
+side="CLIENT"
+
+[[mixins]]
+config="sodium-fps-step-fix.mixins.json"
