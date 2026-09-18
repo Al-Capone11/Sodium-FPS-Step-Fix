@@ -5,7 +5,6 @@
 # still applies to dependencies, and mixin configs are declared via
 # the [[mixins]] block.
 
-license="CC0-1.0"
 
 [[mods]]
 modId="sodiumfpsstepfix"
