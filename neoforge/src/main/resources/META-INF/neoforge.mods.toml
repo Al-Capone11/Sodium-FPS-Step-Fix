@@ -1,0 +1,45 @@
+# Sodium FPS Step Fix - NeoForge mod metadata (MC 26.2).
+# Structure based on the official NeoForge MDK 26.2 template
+# (NeoForgeMDKs/MDK-26.2-ModDevGradle): since 26.1 the modLoader and
+# loaderVersion fields no longer exist in this file, the "side" field
+# still applies to dependencies, and mixin configs are declared via
+# the [[mixins]] block.
+
+license="CC0-1.0"
+
+[[mods]]
+modId="sodiumfpsstepfix"
+version="${version}"
+displayName="Sodium FPS Step Fix"
+authors="Al-Capone11"
+# Prism/NeoForge only shows the logo when logoFile points inside the jar
+# (bug fixed in the 1.21.1 port of this mod; do not remove this line).
+logoFile="assets/sodium-fps-step-fix/icon.png"
+description='''
+Complemento no oficial para Sodium que permite fijar el limite de FPS en cualquier valor (paso 1) en vez de saltos de 10 en 10. Requiere Sodium.
+'''
+
+[[dependencies.sodiumfpsstepfix]]
+    modId="neoforge"
+    type="required"
+    versionRange="[26.2.0.88,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.sodiumfpsstepfix]]
+    modId="minecraft"
+    type="required"
+    versionRange="[26.2,26.3)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.sodiumfpsstepfix]]
+    modId="sodium"
+    type="required"
+    versionRange="*"
+    ordering="NONE"
+    side="CLIENT"
+
+# The [[mixins]] block tells FML to load our mixin config.
+[[mixins]]
+config="sodium-fps-step-fix.mixins.json"

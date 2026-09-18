@@ -1,0 +1,31 @@
+plugins {
+	id 'net.fabricmc.fabric-loom'
+}
+
+dependencies {
+	// MC 26.x is unobfuscated, so plain loom is used (no mappings/remap).
+	minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
+
+	// Fabric API. This is technically optional, but you probably want it anyway.
+	implementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+
+	// Compilamos contra Sodium para que el Mixin resuelva sus clases, pero
+	// NO lo empaquetamos dentro de nuestro jar (compileOnly = solo compilar).
+	// Nota: en MC 26.1+ Minecraft ya no esta ofuscado, asi que Loom ya no usa
+	// las configuraciones "mod*" (modCompileOnly, modImplementation, etc.);
+	// se usan las configuraciones normales de Gradle.
+	compileOnly "maven.modrinth:sodium:${rootProject.sodium_version_fabric}"
+
+	// En desarrollo (runClient) si lo necesitamos presente para poder probarlo.
+	runtimeOnly "maven.modrinth:sodium:${rootProject.sodium_version_fabric}"
+}
+
+processResources {
+	def version = project.version
+	inputs.property "version", version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": version
+	}
+}

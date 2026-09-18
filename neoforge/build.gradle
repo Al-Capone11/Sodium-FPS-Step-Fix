@@ -1,0 +1,68 @@
+plugins {
+	id 'net.neoforged.moddev' version '2.0.147'
+}
+
+configurations {
+	sodiumNeoForge {
+		transitive = false
+	}
+}
+
+// The Sodium jar published on Modrinth is a jar-in-jar style mod: the real
+// classes (including SodiumConfigBuilder and the api.config structures our
+// mixins target) are nested inside
+// META-INF/jarjar/net.caffeinemc.sodium-neoforge-*-mod.jar. javac does not
+// look through nested jars, so we extract that inner jar once and compile
+// against it. At runtime the real Sodium mod provides the classes
+// (declared below as a normal runtimeOnly dependency, not bundled).
+// Verified against sodium mc26.2-0.9.1-neoforge:
+// META-INF/jarjar/net.caffeinemc.sodium-neoforge-0.9.1+mc26.2-mod.jar.
+def extractSodiumInnerJar = tasks.register('extractSodiumInnerJar', Sync) {
+	from({
+		def outer = configurations.sodiumNeoForge.files.find { it.name.endsWith('.jar') }
+		zipTree(outer)
+	}) {
+		include 'META-INF/jarjar/net.caffeinemc.sodium*.jar'
+	}
+	into layout.buildDirectory.dir('sodium-inner')
+	eachFile { it.path = 'sodium-neoforge-inner.jar' }
+}
+
+dependencies {
+	// Sodium for NeoForge - compile against the extracted inner classes jar
+	compileOnly files(layout.buildDirectory.file('sodium-inner/sodium-neoforge-inner.jar'))
+
+	// Sodium for NeoForge - real mod at runtime (not bundled into our jar)
+	runtimeOnly "maven.modrinth:sodium:${rootProject.sodium_version_neoforge}"
+
+	sodiumNeoForge "maven.modrinth:sodium:${rootProject.sodium_version_neoforge}"
+}
+
+tasks.named('compileJava') {
+	dependsOn extractSodiumInnerJar
+}
+
+neoForge {
+	version = rootProject.neoforge_version
+
+	// Access Transformers: none needed for MC 26.2 (unlike 1.21.1, the
+	// OptionInstance inner interfaces used by OptionsMixin are public in
+	// the merged vanilla artifact - verified with javap). ModDevGradle picks
+	// up src/main/resources/META-INF/accesstransformer.cfg by default if it
+	// ever exists, so no configuration is required either way.
+
+	mods {
+		"${rootProject.name}" {
+			sourceSet project.sourceSets.main
+		}
+	}
+}
+
+processResources {
+	def version = project.version
+	inputs.property "version", version
+
+	filesMatching("META-INF/neoforge.mods.toml") {
+		expand "version": version
+	}
+}
