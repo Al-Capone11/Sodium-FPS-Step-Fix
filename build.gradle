@@ -39,8 +39,5 @@ subprojects {
 	tasks.withType(Jar).configureEach {
 		archiveBaseName.set("${rootProject.name}-${project.name}")
 
-		from(rootProject.file("LICENSE")) {
-			rename { "${it}_${rootProject.name}" }
-		}
 	}
 }
