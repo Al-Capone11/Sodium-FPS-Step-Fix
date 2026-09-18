@@ -1,5 +1,5 @@
 plugins {
-	id 'net.fabricmc.fabric-loom-remap'
+	id 'fabric-loom'
 }
 
 dependencies {
@@ -13,7 +13,9 @@ dependencies {
 }
 
 loom {
-	accessWidenerPath = rootProject.file("common/src/main/resources/sodiumfpsstepfix.accesswidener")
+	// OJO: dentro de loom{} en Loom 1.6, 'rootProject' se resuelve a un Boolean
+	// (isRootProject de la extension), NO al Project raiz. Usar rootDir + file().
+	accessWidenerPath = file("${rootDir}/common/src/main/resources/sodiumfpsstepfix.accesswidener")
 }
 
 processResources {
