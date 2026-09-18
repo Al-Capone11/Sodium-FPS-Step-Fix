@@ -10,7 +10,6 @@
 	"contact": {
 		"sources": "https://github.com/Al-Capone11/sodium-fps-step-fix"
 	},
-	"license": "CC0-1.0",
 	"icon": "assets/sodium-fps-step-fix/icon.png",
 	"environment": "client",
 	"entrypoints": {
