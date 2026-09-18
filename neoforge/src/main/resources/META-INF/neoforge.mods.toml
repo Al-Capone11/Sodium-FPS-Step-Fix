@@ -1,6 +1,5 @@
 modLoader="javafml"
 loaderVersion="[2,)"
-license="CC0-1.0"
 
 [[mods]]
 modId="sodiumfpsstepfix"
