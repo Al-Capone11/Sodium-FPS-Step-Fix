@@ -1,9 +1,13 @@
 # Sodium FPS Step Fix - NeoForge mod metadata (MC 26.3).
-# Structure based on the official NeoForge MDK 26.2 template
-# (NeoForgeMDKs/MDK-26.2-ModDevGradle): since 26.1 the modLoader and
+# Structure based on the official NeoForge MDK 26.3 template
+# (NeoForgeMDKs/MDK-26.3-ModDevGradle): since 26.1 the modLoader and
 # loaderVersion fields no longer exist in this file, the "side" field
 # still applies to dependencies, and mixin configs are declared via
 # the [[mixins]] block.
+# license= is MANDATORY top-level metadata for FML (removed it and the
+# jar was rejected as "not a valid mod file"); the LICENSE file itself
+# stays out of the repo and the jars.
+license="All Rights Reserved"
 
 
 [[mods]]
