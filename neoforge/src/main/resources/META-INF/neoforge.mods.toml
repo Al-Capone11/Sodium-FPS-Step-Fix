@@ -1,6 +1,10 @@
 modLoader="javafml"
 loaderVersion="[2,)"
 
+# license= is MANDATORY top-level metadata for FML (removed it and the jar was
+# rejected as "not a valid mod file"); the LICENSE file itself stays out.
+license="CC0-1.0"
+
 [[mods]]
 modId="sodiumfpsstepfix"
 version="${version}"
