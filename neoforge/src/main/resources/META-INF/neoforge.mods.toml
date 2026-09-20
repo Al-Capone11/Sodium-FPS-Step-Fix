@@ -6,6 +6,10 @@
 # the [[mixins]] block.
 
 
+# license= is MANDATORY top-level metadata for FML (removed it and the jar was
+# rejected as "not a valid mod file"); the LICENSE file itself stays out.
+license="All Rights Reserved"
+
 [[mods]]
 modId="sodiumfpsstepfix"
 version="${version}"
