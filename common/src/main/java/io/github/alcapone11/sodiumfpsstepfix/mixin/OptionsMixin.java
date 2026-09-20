@@ -34,6 +34,23 @@ import java.util.function.ToIntFunction;
  * reescalar, para que el valor guardado sea el FPS real. Las otras 5
  * llamadas de xmap quedan intactas.
  *
+ * ORDINAL EN 26.1 (re-verificado con javap -c contra el merged jar real
+ * de NeoForge 26.1.0.19-beta, neoforge/build/moddev/artifacts/
+ * minecraft-patched-26.1.0.19-beta-merged.jar): el <init> de Options
+ * tiene 6 llamadas a xmap(IntFunction,ToIntFunction,boolean); la de
+ * framerateLimit sigue siendo la SEGUNDA (ordinal 1, bci 198, precedida
+ * por ldc "options.framerateLimit" en bci 166 y new IntRange en 177).
+ * Igual que en 26.2.
+ *
+ * NOTA 26.1: aqui OptionInstance$SliderableValueSet e
+ * OptionInstance$IntRangeBase son package-private (en 26.2 Mojang los
+ * hizo public), por eso el handler declara java.lang.Object como tipo
+ * de retorno: es el patron estandar de Mixin para redirigir metodos
+ * cuyo tipo de retorno no es visible desde fuera; Mixin inserta el
+ * checkcast al tipo real en el sitio de la llamada. El valor devuelto
+ * sigue siendo un OptionInstance.IntRange(10, 260), que ES un
+ * SliderableValueSet via IntRangeBase.
+ *
  * ADVERTENCIA: a diferencia de nuestro otro Mixin (que identifica su
  * objetivo por valores unicos), este usa una posicion (ordinal) dentro
  * del codigo de Mojang. Si una futura version de Minecraft reordena estas
@@ -61,6 +78,7 @@ public class OptionsMixin {
             boolean discrete
     ) {
         // Rango real 10-260, sin reescalar a "escalones" de 1-26.
+        // (retorno Object: SliderableValueSet es package-private en 26.1)
         return new OptionInstance.IntRange(10, 260);
     }
 }
