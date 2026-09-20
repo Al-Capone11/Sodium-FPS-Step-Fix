@@ -21,6 +21,10 @@ dependencies {
 	runtimeOnly "maven.modrinth:sodium:${rootProject.sodium_version_fabric}"
 }
 
+loom {
+	accessWidenerPath = rootProject.file("common/src/main/resources/sodiumfpsstepfix.accesswidener")
+}
+
 processResources {
 	def version = project.version
 	inputs.property "version", version
