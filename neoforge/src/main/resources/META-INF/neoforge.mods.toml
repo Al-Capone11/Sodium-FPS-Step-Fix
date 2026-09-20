@@ -1,4 +1,4 @@
-# Sodium FPS Step Fix - NeoForge mod metadata (MC 26.2).
+# Sodium FPS Step Fix - NeoForge mod metadata (MC 26.1.2).
 # Structure based on the official NeoForge MDK 26.2 template
 # (NeoForgeMDKs/MDK-26.2-ModDevGradle): since 26.1 the modLoader and
 # loaderVersion fields no longer exist in this file, the "side" field
@@ -25,14 +25,14 @@ Complemento no oficial para Sodium que permite fijar el limite de FPS en cualqui
 [[dependencies.sodiumfpsstepfix]]
     modId="neoforge"
     type="required"
-    versionRange="[26.2.0.88,)"
+    versionRange="[26.1.2.109,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.sodiumfpsstepfix]]
     modId="minecraft"
     type="required"
-    versionRange="[26.2,26.3)"
+    versionRange="[26.1.2,26.2)"
     ordering="NONE"
     side="BOTH"
 

@@ -15,8 +15,8 @@ configurations {
 // look through nested jars, so we extract that inner jar once and compile
 // against it. At runtime the real Sodium mod provides the classes
 // (declared below as a normal runtimeOnly dependency, not bundled).
-// Verified against sodium mc26.2-0.9.1-neoforge:
-// META-INF/jarjar/net.caffeinemc.sodium-neoforge-0.9.1+mc26.2-mod.jar.
+// Verified against sodium mc26.1.2-0.9.2-neoforge:
+// META-INF/jarjar/net.caffeinemc.sodium-neoforge-0.9.2+mc26.1.2-mod.jar.
 def extractSodiumInnerJar = tasks.register('extractSodiumInnerJar', Sync) {
 	from({
 		def outer = configurations.sodiumNeoForge.files.find { it.name.endsWith('.jar') }
@@ -45,9 +45,11 @@ tasks.named('compileJava') {
 neoForge {
 	version = rootProject.neoforge_version
 
-	// Access Transformers: none needed for MC 26.2 (unlike 1.21.1, the
-	// OptionInstance inner interfaces used by OptionsMixin are public in
-	// the merged vanilla artifact - verified with javap). ModDevGradle picks
+	// Access Transformers: none needed for MC 26.1.2 (unlike 1.21.1, the
+	// OptionInstance inner interfaces used by OptionsMixin are visible in
+	// the merged vanilla artifact - verified with javap; note they are
+	// package-private here, not public as in 26.2, so the mixin handler
+	// returns Object instead of SliderableValueSet). ModDevGradle picks
 	// up src/main/resources/META-INF/accesstransformer.cfg by default if it
 	// ever exists, so no configuration is required either way.
 
