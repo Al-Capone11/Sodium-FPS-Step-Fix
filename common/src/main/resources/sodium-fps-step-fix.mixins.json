@@ -5,7 +5,7 @@
 	"client": [
 		"MinecraftMixin",
 		"OptionsMixin",
-		"SodiumConfigBuilderMixin"
+		"SodiumGameOptionPagesMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
