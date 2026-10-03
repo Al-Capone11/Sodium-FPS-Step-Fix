@@ -1,9 +1,9 @@
 package io.github.alcapone11.sodiumfpsstepfix;
 
-// MC 1.21.1 (Mojang mappings): ResourceLocation with
-// ResourceLocation.fromNamespaceAndPath(...). Verified by successful
-// compilation against both loom and ModDevGradle artifacts.
-import net.minecraft.resources.ResourceLocation;
+// MC 1.21.11 (Mojang mappings): renamed to Identifier
+// (net.minecraft.resources.Identifier, factory Identifier.fromNamespaceAndPath).
+// Verified via javap against the 1.21.11 merged jar.
+import net.minecraft.resources.Identifier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public final class SodiumFPSStepFix {
 		LOGGER.info("Sodium FPS Step Fix loaded.");
 	}
 
-	public static ResourceLocation id(String path) {
-		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+	public static Identifier id(String path) {
+		return Identifier.fromNamespaceAndPath(MOD_ID, path);
 	}
 }

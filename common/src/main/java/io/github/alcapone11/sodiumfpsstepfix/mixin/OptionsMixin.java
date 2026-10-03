@@ -53,6 +53,15 @@ import java.util.function.ToIntFunction;
  *   (IntRange(5,100), ordinal 3) y mouseWheelSensitivity (IntRange(-200,100), ordinal 4).
  * El campo framerateLimit sigue siendo la SEGUNDA llamada xmap(IntFunction, ToIntFunction)
  * dentro de <init> => ordinal = 1 es CORRECTO en 1.21.1.
+ *
+ * VERIFICADO PARA 1.21.11 (javap sobre minecraft-merged 1.21.11, mappings Mojang):
+ * - IntRangeBase solo declara xmap(IntFunction, ToIntFunction, boolean) - 3 ARGS
+ *   (la firma de 2 args de 1.21.1 desaparecio); vanilla pasa true en las 6 llamadas.
+ * - Bytecode de Options.<init>: offset 166 ldc "options.framerateLimit" ->
+ *   offset 198 invokevirtual IntRange.xmap(IntFunction,ToIntFunction,Z) -> ordinal 1
+ *   (ordinal 0 = entityDistanceScaling IntRange(2,20), offset 133).
+ * - El Mixin ahora apunta a la firma de 3 args; el handler recibe el boolean
+ *   applyValueImmediately y lo descarta (el ctor IntRange(I,I) ya lo pone en true).
  */
 @Mixin(Options.class)
 public class OptionsMixin {
@@ -62,14 +71,15 @@ public class OptionsMixin {
             method = "<init>",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/OptionInstance$IntRange;xmap(Ljava/util/function/IntFunction;Ljava/util/function/ToIntFunction;)Lnet/minecraft/client/OptionInstance$SliderableValueSet;",
+                    target = "Lnet/minecraft/client/OptionInstance$IntRange;xmap(Ljava/util/function/IntFunction;Ljava/util/function/ToIntFunction;Z)Lnet/minecraft/client/OptionInstance$SliderableValueSet;",
                     ordinal = 1
             )
     )
     private OptionInstance.SliderableValueSet sodiumFpsStepFix$fixFramerateLimitRange(
             OptionInstance.IntRange self,
             IntFunction to,
-            ToIntFunction from
+            ToIntFunction from,
+            boolean applyValueImmediately
     ) {
         // Rango real 10-260, sin reescalar a "escalones" de 1-26.
         return new OptionInstance.IntRange(10, 260);
