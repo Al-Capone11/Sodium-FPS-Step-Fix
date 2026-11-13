@@ -16,31 +16,47 @@ import java.util.function.ToIntFunction;
  *
  *     new OptionInstance.IntRange(1, 26).xmap(value -> value * 10, value -> value / 10, true)
  *
- * Por eso, aunque Sodium ya permita elegir 144, al aplicar Minecraft hacia
- * 144 / 10 = 14 (division entera) y al leerlo de vuelta 14 * 10 = 140.
+ * Por eso el slider solo ofrece 140/150 y no 144: en el espacio real el
+ * paso es 10 (next(1) -> 2 -> 20), y al aplicar Minecraft hacia 144 / 10 = 14
+ * (division entera) y al leerlo de vuelta 14 * 10 = 140.
  *
  * Dentro del constructor de Options hay 6 llamadas a este mismo metodo
  * xmap(IntFunction, ToIntFunction, boolean) (una por cada opcion que
  * necesita reescalar su rango interno). La de framerateLimit es la
- * SEGUNDA (ordinal = 1, contando desde 0), confirmado directamente sobre
- * el codigo fuente de esta version de Minecraft (26.2):
+ * SEGUNDA (ordinal = 1, contando desde 0).
  *
- *   ordinal 0 -> guiScale-like (linea 117, /4.0)
- *   ordinal 1 -> framerateLimit (linea 129, *10 / 10)  <- la que arreglamos
- *   ordinal 2..5 -> otras opciones (brillo, distancia niebla, etc.)
+ * VERIFICADO EN 26.3 con javap -p -c sobre net.minecraft.client.Options
+ * (jar: .gradle/loom-cache/minecraftMaven/net/minecraft/
+ * minecraft-merged-cad0293ec3/26.3/...): en <init> la 2da llamada a
+ * IntRange.xmap(IntFunction, ToIntFunction, boolean) es la del offset 196,
+ * precedida del ldc "options.framerateLimit" (offset 164) y seguida del
+ * putfield framerateLimit (offset 220). Las 6 llamadas siguen en el mismo
+ * orden que en 26.2, asi que ordinal = 1 sigue apuntando a framerateLimit.
  *
  * Este Mixin reemplaza SOLO esa 2da llamada: en vez de aplicar la
  * transformacion *10 //10, devuelve un IntRange real de 10 a 260 sin
  * reescalar, para que el valor guardado sea el FPS real. Las otras 5
  * llamadas de xmap quedan intactas.
  *
- * ADVERTENCIA: a diferencia de nuestro otro Mixin (que identifica su
- * objetivo por valores unicos), este usa una posicion (ordinal) dentro
- * del codigo de Mojang. Si una futura version de Minecraft reordena estas
- * opciones dentro de Options, el ordinal puede dejar de apuntar a
- * framerateLimit. Repite el proceso de "jar xf ... Options.java" y
- * cuenta de nuevo las llamadas a ".xmap(" con 3 argumentos si esto llega
- * a pasar.
+ * NOTA IMPORTANTE (26.3): el arreglo del slider de Sodium son DOS piezas
+ * complementarias: este Mixin (lado Minecraft) y SodiumRangeMixin (lado
+ * Sodium). Sodium >= 0.9.3-beta.1 ya no llama a setRange(10, 260, 10) en su
+ * buildGeneralPage: obtiene min/max/step del propio OptionInstance vanilla
+ * via VanillaOption#getRangeFor (min = fromSliderValue(0) = 10,
+ * max = fromSliderValue(1) = 260, step = next(min) - min), asi que con el
+ * IntRange(10, 260) que devolvemos aqui ya obtiene paso 1. Para las versiones
+ * anteriores (0.9.2 y 0.9.3-alpha.1), que si traen el (10, 260, 10) escrito a
+ * mano, el paso lo corrige SodiumRangeMixin a nivel del record Range. El
+ * antiguo SodiumConfigBuilderMixin se elimino porque su selector de metodo
+ * (buildGeneralPage(ConfigBuilder)) desaparecio en 0.9.3-beta.1 y hacia fallar
+ * el arranque con InvalidInjectionException.
+ *
+ * ADVERTENCIA: a diferencia de los otros Mixins, este usa una posicion
+ * (ordinal) dentro del codigo de Mojang. Si una version futura de Minecraft
+ * reordena estas opciones dentro de Options, el ordinal puede dejar de
+ * apuntar a framerateLimit. Para reverificarlo: javap -p -c sobre
+ * net.minecraft.client.Options y contar las llamadas a
+ * IntRange.xmap(IntFunction, ToIntFunction, boolean) dentro de <init>.
  */
 @Mixin(Options.class)
 public class OptionsMixin {
